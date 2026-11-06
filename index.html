@@ -88,13 +88,15 @@ import {getDatabase,ref,set,get,update,push,onValue,remove,query,orderByChild,eq
 
 /* 1) ВСТАВЬ СЮДА СВОЙ FIREBASE CONFIG ИЗ PROJECT SETTINGS → YOUR APPS */
 const firebaseConfig = {
-  apiKey: "AIzaSyDaAWonJziFLUOFNN4nrdAVK1Kx9HXAT6g",
+  apiKey: "AIzaSyDAaWonJziFLUOFNN4nrdAVK1Kx9HXAT6g",
   authDomain: "frutinger-26d84.firebaseapp.com",
   databaseURL: "https://frutinger-26d84-default-rtdb.europe-west1.firebasedatabase.app",
   projectId: "frutinger-26d84",
+  storageBucket: "frutinger-26d84.firebasestorage.app",
   messagingSenderId: "160094771810",
   appId: "1:160094771810:web:9e6d487d8d835c2566cf3b"
 };
+ 
 /* Настрой Firebase Auth: Email/Password. Для username login используется индекс usernames/{lowercase} → email.
    Важно: правила RTDB/Storage обязательны. Никогда не полагайся на скрытие кнопок как на защиту. */
 const appFB=initializeApp(firebaseConfig),auth=getAuth(appFB),db=getDatabase(appFB);
