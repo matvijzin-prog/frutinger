@@ -5,8 +5,8 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Frutinger</title>
 <meta name="theme-color" content="#ff7a45">
-<link rel="manifest" href="./manifest.json">
-<link rel="icon" href="./icon.svg" type="image/svg+xml">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
 <link rel="stylesheet" href="https://unpkg.com/chessboardjs@1.0.0/www/css/chessboard-1.0.0.min.css">
 <style>
 :root{--bg:#fff8f1;--panel:#fff;--ink:#30251f;--muted:#88796f;--accent:#ff784e;--line:#f0e4da;--bubble:#fff0e7;--font:Inter,system-ui,sans-serif}
@@ -20,7 +20,38 @@ aside{border-right:1px solid var(--line);display:flex;flex-direction:column;min-
 #contactList{overflow:auto;flex:1}.side-actions{padding:12px;display:flex;gap:6px;flex-wrap:wrap}
 main{display:flex;flex-direction:column;min-width:0;min-height:0}.chathead{padding:14px 18px;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;gap:10px}.chathead h3{margin:0}.chatbody{flex:1;overflow:auto;padding:18px;background-size:cover;background-position:center}.msg{max-width:min(75%,620px);padding:10px 13px;margin:8px 0;border-radius:16px;background:var(--bubble);overflow-wrap:anywhere}.msg.mine{margin-left:auto;background:#e5f5df}.msg img,.msg video{max-width:100%;border-radius:12px}.msg .tools{font-size:11px;color:var(--muted);margin-top:5px}.composer{border-top:1px solid var(--line);padding:12px;display:flex;gap:7px;align-items:end}.composer textarea{resize:none;max-height:120px;margin:0}.composer button{white-space:nowrap}.toolbar{display:flex;gap:6px;padding:8px 12px;flex-wrap:wrap;border-top:1px solid var(--line)}
 .panel{padding:16px;overflow:auto}.modal{position:fixed;inset:0;background:#21160f88;display:grid;place-items:center;padding:15px;z-index:20}.modal>section{background:white;border-radius:18px;padding:20px;width:min(560px,100%);max-height:90vh;overflow:auto}.row{display:flex;gap:8px;align-items:center}.row>*{flex:1}.story{display:inline-flex;flex-direction:column;align-items:center;margin:8px;cursor:pointer}.story .avatar{width:55px;height:55px;border:3px solid var(--accent)}.gameboard{max-width:340px;margin:12px auto}.fruit{position:fixed;pointer-events:none;z-index:99;font-size:28px;animation:float 2.4s ease-out forwards}@keyframes float{to{transform:translateY(-180px) rotate(300deg);opacity:0}}
-@media(max-width:700px){#app{grid-template-columns:76px 1fr}.brand{font-size:0;padding:14px;justify-content:center}.brand:after{content:"🍊";font-size:25px}.me{padding:10px;justify-content:center}.me .who,.contact .meta,.side-actions .txt{display:none}.contact{padding:12px 16px;justify-content:center}.contact .avatar{width:42px;height:42px}.side-actions{justify-content:center;padding:6px}.side-actions button{padding:9px}.chathead{padding:12px}.msg{max-width:90%}}
+/* Адаптивная раскладка: на телефоне контакты сверху, переписка занимает всё остальное */
+@media(max-width:700px){
+ html,body{height:100%;height:100dvh;overflow:hidden}#app{height:100%;height:100dvh;display:flex;flex-direction:column;box-shadow:none}
+ aside{height:auto;max-height:220px;flex:none;border-right:0;border-bottom:1px solid var(--line);display:grid;grid-template-columns:1fr auto;grid-template-areas:"brand me" "actions actions" "search search" "contacts contacts" "account account";gap:0}
+ .brand{grid-area:brand;font-size:21px;padding:8px 12px}.brand:after{content:none}.me{grid-area:me;padding:6px 10px;border:0}.me .who{display:block}.me .avatar{width:36px;height:36px}
+ aside>.side-actions:first-of-type{grid-area:actions;padding:5px 9px;justify-content:flex-start}
+ aside>div[style*="padding:10px"]{grid-area:search;padding:4px 9px!important;display:flex;gap:6px;align-items:center}
+ #findUser{margin:0;min-width:0}#addContact{width:auto!important;white-space:nowrap;padding:10px}
+ #contactList{grid-area:contacts;display:flex;flex-direction:row;overflow-x:auto;overflow-y:hidden;min-height:58px;max-height:66px;padding:0 5px}
+ .contact{flex:none;padding:5px 8px;border:0;gap:6px}.contact .meta{display:block;max-width:100px}.contact .avatar{width:34px;height:34px}
+ aside>.side-actions:last-of-type{grid-area:account;padding:3px 8px;justify-content:flex-end}.side-actions button{padding:7px 10px;font-size:13px}
+ main{flex:1;min-height:0}.chathead{padding:8px 10px;min-height:56px}.chathead h3{font-size:16px}.chathead .row{gap:4px}.chathead .row button{padding:8px 10px}
+ #storiesStrip{max-height:72px}.chatbody{padding:10px}.msg{max-width:92%;font-size:15px}.toolbar{flex-wrap:nowrap;overflow-x:auto;padding:6px 8px;gap:6px}.toolbar button{flex:0 0 auto;padding:9px 11px}
+ .composer{padding:7px;gap:6px}.composer textarea{min-width:0;font-size:16px}.composer button{padding:11px 14px}
+ .modal{padding:8px;align-items:end}.modal>section{width:100%;max-height:88dvh;border-radius:18px 18px 10px 10px;padding:16px}
+ #auth{margin:4vh 12px;padding:22px}
+}
+@media(max-width:390px){.brand{font-size:18px}.me .who{max-width:105px}.me .who strong{display:block;max-width:105px;overflow:hidden;text-overflow:ellipsis}.side-actions button{font-size:12px;padding:7px 8px}#addContact{font-size:12px;padding:9px 8px}.contact .meta{max-width:76px}}
+/* Все цветовые темы используют единые переменные, включая поля, кнопки и сообщения */
+:root[data-fruit="strawberry"]{--bg:#fff1f2;--panel:#fffafb;--ink:#40151f;--muted:#93636e;--accent:#e63858;--line:#f3cbd3;--bubble:#ffe1e7;--soft:#f9d5dd;--mine:#fbd0d8}
+:root[data-fruit="banana"]{--bg:#fffbea;--panel:#fffef5;--ink:#423711;--muted:#88783d;--accent:#e3b51e;--line:#f0e3a9;--bubble:#fff4c5;--soft:#f8edc1;--mine:#f8e9a5}
+:root[data-fruit="orange"]{--bg:#fff6ed;--panel:#fffdf9;--ink:#402515;--muted:#92725d;--accent:#f07832;--line:#f1d7c4;--bubble:#ffead9;--soft:#f7e1d0;--mine:#f7dfc8}
+:root[data-fruit="watermelon"]{--bg:#effaf2;--panel:#fbfffc;--ink:#173b2b;--muted:#638575;--accent:#269b68;--line:#cce9d7;--bubble:#ddf5e6;--soft:#d8efe0;--mine:#ccebd8}
+:root[data-fruit="blueberry"]{--bg:#f3f1ff;--panel:#fcfbff;--ink:#282044;--muted:#777093;--accent:#7561c9;--line:#ddd7f4;--bubble:#ebe6ff;--soft:#e5e0f7;--mine:#ded8fa}
+:root[data-fruit="dark"]{color-scheme:dark;--bg:#111318;--panel:#1b1e25;--ink:#f3f2f7;--muted:#a6a8b3;--accent:#f07859;--line:#343944;--bubble:#292e38;--soft:#303540;--mine:#263c32}
+:root[data-fruit="dark"] body,:root[data-fruit="dark"] #app,:root[data-fruit="dark"] #auth,:root[data-fruit="dark"] .modal>section{background:var(--panel);color:var(--ink)}
+:root[data-fruit="dark"] input,:root[data-fruit="dark"] textarea,:root[data-fruit="dark"] select{background:#242832;color:var(--ink);border-color:var(--line)}
+:root[data-fruit="dark"] button.secondary{background:#303540;color:var(--ink)}
+:root[data-fruit="dark"] .contact{border-color:#303540}:root[data-fruit="dark"] .contact:hover,:root[data-fruit="dark"] .contact.active{background:#292e38}:root[data-fruit="dark"] .msg.mine{background:#263c32}:root[data-fruit="dark"] .msg{background:var(--bubble);color:var(--ink)}:root[data-fruit="dark"] .chathead,:root[data-fruit="dark"] .composer,:root[data-fruit="dark"] .toolbar,:root[data-fruit="dark"] aside{border-color:var(--line)}:root[data-fruit="dark"] .me{border-color:var(--line)}:root[data-fruit="dark"] .side-actions button.secondary{background:#303540;color:var(--ink)}:root[data-fruit="dark"] #contactList{background:var(--panel)}
+:root[data-fruit="dark"] .contact:hover,:root[data-fruit="dark"] .contact.active{background:#303540}
+:root[data-fruit="dark"] .msg.mine{background:var(--mine)}
+button.secondary{background:var(--soft);color:var(--ink)}.contact{border-color:var(--line)}.contact:hover,.contact.active{background:var(--bubble)}.msg.mine{background:var(--mine)}
 </style>
 </head>
 <body>
@@ -44,7 +75,7 @@ main{display:flex;flex-direction:column;min-width:0;min-height:0}.chathead{paddi
   <header class="chathead"><div><h3 id="chatTitle">Выберите контакт</h3><small class="muted" id="chatSubtitle">Сообщения защищены правилами Firebase</small></div><div class="row" style="flex:0 0 auto"><button class="secondary" id="callBtn" title="Видеозвонок">📞</button><button class="secondary" id="gamesBtn" title="Игры">🎮</button><button class="secondary" id="favoriteBtn" title="Избранное">☆</button></div></header>
   <div id="storiesStrip" style="padding:4px 12px;overflow:auto;white-space:nowrap"></div>
   <div id="chatBody" class="chatbody"><p class="muted">Добавь контакт по юзернейму, чтобы начать общение.</p></div>
-  <div class="toolbar"><button class="secondary" id="emojiBtn">😊</button><button class="secondary" id="stickerBtn">🍉</button><button class="secondary" id="fileBtn">📎</button><button class="secondary" id="voiceBtn">🎙</button><button class="secondary" id="videoBtn">🎥</button><button class="secondary" id="pollBtn">📊</button><input id="fileInput" type="file" class="hidden"><input id="videoInput" type="file" accept="video/*" capture="user" class="hidden"></div>
+  <div class="toolbar"><button class="secondary" id="emojiBtn">😊</button><button class="secondary" id="stickerBtn">🍉</button><button class="secondary" id="pollBtn">📊</button></div>
   <form class="composer" id="sendForm"><textarea id="messageInput" rows="1" placeholder="Написать сообщение..." disabled></textarea><button id="sendBtn" disabled>➤</button></form>
  </main>
 </div>
@@ -54,156 +85,110 @@ main{display:flex;flex-direction:column;min-width:0;min-height:0}.chathead{paddi
 import {initializeApp} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
 import {getAuth,onAuthStateChanged,createUserWithEmailAndPassword,signInWithEmailAndPassword,sendPasswordResetEmail,updateProfile,signOut} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 import {getDatabase,ref,set,get,update,push,onValue,remove,query,orderByChild,equalTo,limitToLast} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
-import {getStorage,ref as storageRef,uploadBytes,getDownloadURL} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-storage.js";
 
-/* 1) ВСТАВЬ СЮДА СВОЙ FIREBASE CONFIG */
+/* 1) ВСТАВЬ СЮДА СВОЙ FIREBASE CONFIG ИЗ PROJECT SETTINGS → YOUR APPS */
 const firebaseConfig = {
-  apiKey: "AIzaSyDAaWonJziFLUOFNN4nrdAVK1Kx9HXAT6g",
+  apiKey: "AIzaSyDaAWonJziFLUOFNN4nrdAVK1Kx9HXAT6g",
   authDomain: "frutinger-26d84.firebaseapp.com",
   databaseURL: "https://frutinger-26d84-default-rtdb.europe-west1.firebasedatabase.app",
   projectId: "frutinger-26d84",
-  storageBucket: "frutinger-26d84.firebasestorage.app",
   messagingSenderId: "160094771810",
   appId: "1:160094771810:web:9e6d487d8d835c2566cf3b"
 };
-
-const appFB=initializeApp(firebaseConfig),auth=getAuth(appFB),db=getDatabase(appFB),storage=getStorage(appFB);
+/* Настрой Firebase Auth: Email/Password. Для username login используется индекс usernames/{lowercase} → email.
+   Важно: правила RTDB/Storage обязательны. Никогда не полагайся на скрытие кнопок как на защиту. */
+const appFB=initializeApp(firebaseConfig),auth=getAuth(appFB),db=getDatabase(appFB);
 const $=id=>document.getElementById(id), esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 let me=null,profile=null,activeUid=null,activeChat=null,msgUnsub=null,contactsUnsub=null,storiesUnsub=null,mediaRecorder=null,recordChunks=[],pc=null,localStream=null,callRef=null,callListeners=[],adminClicks=0,gameUnsub=null;
 const avatarFallback="https://placehold.co/100x100/ffe0ce/8a4c2b?text=🍊";
 const chatId=(a,b)=>[a,b].sort().join("_");
-
 function note(t){$("authError").textContent=t;setTimeout(()=>$("authError").textContent="",5000)}
 function showModal(title,html){$("modalTitle").textContent=title;$("modalContent").innerHTML=html;$("modal").classList.remove("hidden")}
 function closeModal(){$("modal").classList.add("hidden")}
 $("closeModal").onclick=closeModal;
 $("loginTab").onclick=()=>{$("loginForm").classList.remove("hidden");$("registerForm").classList.add("hidden")};
 $("registerTab").onclick=()=>{$("registerForm").classList.remove("hidden");$("loginForm").classList.add("hidden")};
-
-// Виртуальный email для входа по юзернейму
 function virtualEmail(u){return u.toLowerCase()+"@frutinger-user.invalid"}
-
 $("registerForm").onsubmit=async e=>{e.preventDefault();try{
  const email=$("regEmail").value.trim().toLowerCase(),username=$("regUser").value.trim(),key=username.toLowerCase();
  if((await get(ref(db,"usernames/"+key))).exists())throw Error("Этот юзернейм уже занят");
  const cred=await createUserWithEmailAndPassword(auth,email,$("regPass").value);
- await set(ref(db,"usernames/"+key),email);
+ await set(ref(db,"usernames/"+key),{uid:cred.user.uid,email});
  await set(ref(db,"users/"+cred.user.uid),{uid:cred.user.uid,email,username,displayName:username,bio:"",avatar:"",verified:false,createdAt:Date.now()});
  }catch(err){note(err.message)}};
-
 $("loginForm").onsubmit=async e=>{e.preventDefault();try{
- let id=$("loginName").value.trim();
- let email;
- if(id.includes("@")){
-   email = id;
- } else {
-   email = (await get(ref(db,"usernames/"+id.toLowerCase()))).val();
-   if(!email) throw Error("Юзернейм не найден");
- }
+ let id=$("loginName").value.trim(),email=id;
+ if(!id.includes("@")){let entry=(await get(ref(db,"usernames/"+id.toLowerCase()))).val();email=typeof entry==="string"?entry:entry?.email;}
+ if(!email)throw Error("Юзернейм не найден");
  await signInWithEmailAndPassword(auth,email,$("loginPass").value);
  }catch(err){note(err.message)}};
-
 $("resetPass").onclick=async()=>{let email=$("loginName").value.trim();if(!email.includes("@")){note("Для сброса введи Email, а не юзернейм.");return}try{await sendPasswordResetEmail(auth,email);note("Письмо для сброса отправлено.")}catch(e){note(e.message)}};
-
 onAuthStateChanged(auth,async user=>{
  if(!user){me=null;$("auth").classList.remove("hidden");$("app").classList.add("hidden");return}
  me=user;$("auth").classList.add("hidden");$("app").classList.remove("hidden");
  const snap=await get(ref(db,"users/"+me.uid));profile=snap.val()||{uid:me.uid,displayName:me.email};
  if(!snap.exists())await set(ref(db,"users/"+me.uid),profile);
- renderMe();subscribeContacts();subscribeStories();
+ renderMe();await loadSettings();subscribeContacts();subscribeStories();
 });
-
 function renderMe(){$("myName").textContent=profile.displayName||profile.username;$("myHandle").textContent="@"+(profile.username||"");$("myAvatar").src=profile.avatar||avatarFallback}
 $("logoutBtn").onclick=()=>signOut(auth);
 $("switchAccountBtn").onclick=async()=>{await signOut(auth);$("loginName").value="";$("loginPass").value="";$("loginTab").click();$("loginName").focus();};
-
-$("profileBtn").onclick=()=>showModal("Профиль",`<label>Имя</label><input id="pName" value="${esc(profile.displayName||"")}"><label>Описание</label><textarea id="pBio">${esc(profile.bio||"")}</textarea><label>Аватар</label><input id="pAvatar" type="file" accept="image/*"><button id="saveProfile">Сохранить</button>`);
-$("modalContent").addEventListener("click",async e=>{if(e.target.id==="saveProfile"){try{let avatar=profile.avatar||"";let f=$("pAvatar").files[0];if(f){let r=storageRef(storage,`avatars/${me.uid}/${Date.now()}_${f.name}`);await uploadBytes(r,f);avatar=await getDownloadURL(r)}
- profile={...profile,displayName:$("pName").value.trim(),bio:$("pBio").value.trim(),avatar};await update(ref(db,"users/"+me.uid),{displayName:profile.displayName,bio:profile.bio,avatar});renderMe();closeModal()}catch(err){alert(err.message)}}});
-
-$("addContact").onclick=async()=>{let name=$("findUser").value.trim().replace(/^@/,"").toLowerCase();if(!name)return;try{let email=(await get(ref(db,"usernames/"+name))).val();if(!email)throw Error("Пользователь не найден");
- let usersSnap = await get(ref(db, "users")); let targetUid = null;
- usersSnap.forEach(u => { if(u.val().email === email) targetUid = u.key; });
- if(!targetUid) throw Error("Профиль не найден");
- if(targetUid===me.uid)throw Error("Это ты 🙂");
- await update(ref(db,`contacts/${me.uid}`),{[targetUid]:true});
- await update(ref(db,`contacts/${targetUid}`),{[me.uid]:true});
- $("findUser").value="";
-}catch(e){alert(e.message)}};
-
+$("profileBtn").onclick=()=>showModal("Профиль",`<label>Имя / публичный ник (его увидят все контакты)</label><input id="pName" maxlength="32" value="${esc(profile.displayName||profile.username||"")}"><label>Описание</label><textarea id="pBio">${esc(profile.bio||"")}</textarea><label>Аватарка — ссылка на изображение (без Firebase Storage)</label><input id="pAvatarUrl" type="url" placeholder="https://..." value="${esc(profile.avatar||"")}"><p class="muted small">Можно оставить пустым — будет стандартный фруктовый аватар. Фотофайлы не загружаются на сервер.</p><button id="saveProfile">Сохранить профиль</button>`);
+$("modalContent").addEventListener("click",async e=>{if(e.target.id==="saveProfile"){try{let avatar=$("pAvatarUrl").value.trim();if(avatar&&!/^https:\/\//i.test(avatar))throw Error("Укажи безопасную ссылку, начинающуюся с https://");profile={...profile,displayName:$("pName").value.trim(),bio:$("pBio").value.trim(),avatar};await update(ref(db,"users/"+me.uid),{displayName:profile.displayName,bio:profile.bio,avatar});renderMe();closeModal()}catch(err){alert(err.message)}}});
+$("addContact").onclick=async()=>{let name=$("findUser").value.trim().replace(/^@/,"").toLowerCase();if(!name)return;try{let entry=(await get(ref(db,"usernames/"+name))).val();let uid=typeof entry==="object"?entry?.uid:null;
+ if(!uid){let all=(await get(ref(db,"users"))).val()||{};let match=Object.values(all).find(u=>(u.username||"").toLowerCase()===name||((typeof entry==="string")&&u.email===entry));uid=match?.uid||null;}
+ if(!uid)throw Error("Пользователь не найден. Проверь юзернейм.");let u=await get(ref(db,"users/"+uid));if(!u.exists())throw Error("Профиль не найден");if(uid===me.uid)throw Error("Это ты 🙂");await update(ref(db,`contacts/${me.uid}`),{[uid]:true});await update(ref(db,`contacts/${uid}`),{[me.uid]:true});$("findUser").value=""}catch(e){alert(e.message)}};
 function subscribeContacts(){if(contactsUnsub)contactsUnsub();contactsUnsub=onValue(ref(db,"contacts/"+me.uid),async s=>{let ids=Object.keys(s.val()||{}),users=await Promise.all(ids.map(async id=>(await get(ref(db,"users/"+id))).val()));$("contactList").innerHTML=users.filter(Boolean).map(u=>`<div class="contact ${activeUid===u.uid?"active":""}" data-uid="${u.uid}"><img class="avatar" src="${esc(u.avatar||avatarFallback)}"><div class="meta"><strong>${esc(u.displayName||u.username)} ${u.verified?"✓":""}</strong><small>@${esc(u.username||"")}</small></div></div>`).join("")||'<p class="muted" style="padding:15px">Контактов пока нет</p>'})}
-
 $("contactList").onclick=e=>{let c=e.target.closest(".contact");if(c)openChat(c.dataset.uid)};
-
 async function openChat(uid){activeUid=uid;activeChat=chatId(me.uid,uid);let u=(await get(ref(db,"users/"+uid))).val();$("chatTitle").textContent=u?.displayName||u?.username||"Чат";$("chatSubtitle").textContent="@"+(u?.username||"");$("messageInput").disabled=false;$("sendBtn").disabled=false;subscribeMessages();subscribeGame();subscribeContacts()}
-
 function subscribeMessages(){if(msgUnsub)msgUnsub();msgUnsub=onValue(query(ref(db,"messages/"+activeChat),orderByChild("createdAt"),limitToLast(150)),s=>{let arr=Object.entries(s.val()||{}).sort((a,b)=>(a[1].createdAt||0)-(b[1].createdAt||0));$("chatBody").innerHTML=arr.map(([id,m])=>{let mine=m.uid===me.uid;let content=m.type==="image"?`<img src="${esc(m.url)}">`:m.type==="video"?`<video src="${esc(m.url)}" controls playsinline></video>`:m.type==="audio"?`<audio src="${esc(m.url)}" controls></audio>`:m.type==="file"?`<a href="${esc(m.url)}" target="_blank" rel="noopener">${esc(m.name||"Файл")}</a>`:m.type==="sticker"?`<div style="font-size:46px">${esc(m.text)}</div>`:m.type==="poll"?`<b>Опрос: ${esc(m.question)}</b><div>${(m.options||[]).map((o,i)=>`<button class="secondary vote" data-mid="${id}" data-i="${i}">${esc(o)} (${Object.values(m.votes||{}).filter(v=>v===i).length})</button>`).join(" ")}</div>`:esc(m.text||"");
  return `<article class="msg ${mine?"mine":""}">${content}<div class="tools">${new Date(m.createdAt||Date.now()).toLocaleTimeString()} ${m.edited?"· изменено":""} ${mine?`<button class="secondary editMsg" data-id="${id}">✎</button><button class="secondary delMsg" data-id="${id}">×</button>`:""}<button class="secondary favMsg" data-id="${id}">☆</button></div></article>`}).join("");$("chatBody").scrollTop=$("chatBody").scrollHeight})}
-
 $("sendForm").onsubmit=async e=>{e.preventDefault();let text=$("messageInput").value.trim();if(!text||!activeChat)return;await push(ref(db,"messages/"+activeChat),{uid:me.uid,text,type:"text",createdAt:Date.now()});$("messageInput").value=""};
-
 $("chatBody").onclick=async e=>{let b=e.target.closest("button");if(!b)return;let id=b.dataset.id;if(b.classList.contains("delMsg")){let s=await get(ref(db,`messages/${activeChat}/${id}`));if(s.val()?.uid===me.uid&&confirm("Удалить сообщение?"))await remove(ref(db,`messages/${activeChat}/${id}`))}
  if(b.classList.contains("editMsg")){let s=await get(ref(db,`messages/${activeChat}/${id}`)),m=s.val();if(m?.uid!==me.uid)return;let t=prompt("Изменить сообщение",m.text||"");if(t!==null)await update(ref(db,`messages/${activeChat}/${id}`),{text:t,edited:true})}
  if(b.classList.contains("favMsg")){await set(ref(db,`favorites/${me.uid}/${activeChat}_${id}`),{chat:activeChat,messageId:id,createdAt:Date.now()});b.textContent="★"}
  if(b.classList.contains("vote")){await set(ref(db,`messages/${activeChat}/${b.dataset.mid}/votes/${me.uid}`),Number(b.dataset.i))}
 };
-
 $("emojiBtn").onclick=()=>{let e=prompt("Выбери смайлик: 😀 😍 😂 🥑 🍊 🍓 🍉");if(e)$("messageInput").value+=e};
 $("stickerBtn").onclick=()=>{let s=prompt("Стикер: 🍊 🍓 🍉 🥑 🍍 🥝");if(s&&activeChat)push(ref(db,"messages/"+activeChat),{uid:me.uid,text:s,type:"sticker",createdAt:Date.now()})};
-$("fileBtn").onclick=()=>$("fileInput").click();
-$("fileInput").onchange=async()=>{let f=$("fileInput").files[0];if(!f||!activeChat)return;await uploadMessageFile(f,f.type.startsWith("image/")?"image":"file")};
-$("videoInput").onchange=async()=>{let f=$("videoInput").files[0];if(f&&activeChat)await uploadMessageFile(f,"video")};
-$("videoBtn").onclick=()=>$("videoInput").click();
-async function uploadMessageFile(f,type){if(f.size>30*1024*1024){alert("Максимальный размер файла — 30 МБ");return}let r=storageRef(storage,`chatFiles/${activeChat}/${me.uid}/${Date.now()}_${f.name}`);await uploadBytes(r,f);let url=await getDownloadURL(r);await push(ref(db,"messages/"+activeChat),{uid:me.uid,type,url,name:f.name,createdAt:Date.now()})}
-$("voiceBtn").onclick=async()=>{if(!activeChat)return;if(mediaRecorder?.state==="recording"){mediaRecorder.stop();$("voiceBtn").textContent="🎙";return}try{let stream=await navigator.mediaDevices.getUserMedia({audio:true});mediaRecorder=new MediaRecorder(stream);recordChunks=[];mediaRecorder.ondataavailable=e=>recordChunks.push(e.data);mediaRecorder.onstop=async()=>{let blob=new Blob(recordChunks,{type:mediaRecorder.mimeType||"audio/webm"});stream.getTracks().forEach(t=>t.stop());await uploadMessageFile(new File([blob],"voice.webm",{type:blob.type}),"audio")};mediaRecorder.start();$("voiceBtn").textContent="⏹ Стоп"}catch(e){alert("Нет доступа к микрофону: "+e.message)}};
-
 $("pollBtn").onclick=()=>{if(!activeChat)return;showModal("Создать опрос",'<input id="pollQ" placeholder="Вопрос"><input id="pollA" placeholder="Вариант 1"><input id="pollB" placeholder="Вариант 2"><button id="makePoll">Отправить</button>')};
 $("modalContent").addEventListener("click",async e=>{if(e.target.id==="makePoll"){let q=$("pollQ").value,a=$("pollA").value,b=$("pollB").value;if(q&&a&&b){await push(ref(db,"messages/"+activeChat),{uid:me.uid,type:"poll",question:q,options:[a,b],votes:{},createdAt:Date.now()});closeModal()}}});
-
 $("favoriteBtn").onclick=async()=>{let s=await get(ref(db,"favorites/"+me.uid));showModal("Избранное",Object.values(s.val()||{}).map(x=>`<p>Чат ${esc(x.chat)} · сообщение ${esc(x.messageId)}</p>`).join("")||"Пока пусто")};
-
-$("settingsBtn").onclick=()=>showModal("Настройки",`<label>Тема</label><select id="theme"><option value="light">Светлая</option><option value="dark">Тёмная</option><option value="pink">Клубничная</option></select><label>Шрифт</label><select id="font"><option>Inter</option><option>Georgia</option><option>Arial</option><option>Courier New</option></select><label>Обои чата (URL изображения)</label><input id="wall" placeholder="https://..."><button id="saveSettings">Применить</button>`);
-$("modalContent").addEventListener("click",e=>{if(e.target.id==="saveSettings"){let t=$("theme").value;document.documentElement.style.setProperty("--bg",t==="dark"?"#17191d":t==="pink"?"#fff0f6":"#fff8f1");document.documentElement.style.setProperty("--panel",t==="dark"?"#24272d":"#fff");document.documentElement.style.setProperty("--ink",t==="dark"?"#f5f5f5":"#30251f");document.documentElement.style.setProperty("--font",$("font").value);let w=$("wall").value.trim();$("chatBody").style.backgroundImage=w?`url("${w.replace(/["\\]/g,"")}")`:"none";closeModal()}});
-
-$("storiesBtn").onclick=()=>showModal("Добавить историю",'<input id="storyFile" type="file" accept="image/*,video/*"><button id="postStory">Опубликовать на 24 часа</button>');
-$("modalContent").addEventListener("click",async e=>{if(e.target.id==="postStory"){let f=$("storyFile").files[0];if(!f)return;let r=storageRef(storage,`stories/${me.uid}/${Date.now()}_${f.name}`);await uploadBytes(r,f);let url=await getDownloadURL(r);await push(ref(db,"stories"),{uid:me.uid,url,type:f.type.startsWith("video")?"video":"image",createdAt:Date.now(),expiresAt:Date.now()+86400000});closeModal()}});
-
-function subscribeStories(){if(storiesUnsub)storiesUnsub();storiesUnsub=onValue(ref(db,"stories"),s=>{let stories=Object.entries(s.val()||{}).filter(([id,x])=>x.expiresAt>Date.now());$("storiesStrip").innerHTML=stories.map(([id,x])=>`<span class="story" data-story="${id}"><img class="avatar" src="${x.type==="image"?esc(x.url):avatarFallback}"><small>${esc(x.uid===me.uid?"Вы":x.uid.slice(0,7))}</small></span>`).join("")+'<button class="secondary" id="newStoryInline">＋</button>'})}
-
-$("storiesStrip").onclick=e=>{if(e.target.id==="newStoryInline")$("storiesBtn").click();let s=e.target.closest("[data-story]");if(s){get(ref(db,"stories/"+s.dataset.story)).then(x=>{let v=x.val();showModal("История",v.type==="video"?`<video src="${esc(v.url)}" controls autoplay style="width:100%"></video>`:`<img src="${esc(v.url)}" style="width:100%">`)})}};
-
-/* Скрытая админ-панель */
+let userSettings={fruit:"orange",font:"Inter",wall:""};
+function applySettings(){document.documentElement.dataset.fruit=userSettings.fruit||"orange";document.documentElement.style.setProperty("--font",userSettings.font||"Inter");$("chatBody").style.backgroundImage=userSettings.wall?`url("${String(userSettings.wall).replace(/["\\]/g,"")}")`:"none"}
+function settingsKey(){return "frutinger-settings-"+me.uid}
+async function loadSettings(){let local={};try{local=JSON.parse(localStorage.getItem(settingsKey())||"{}")}catch{};userSettings={...userSettings,...local};applySettings();try{let snap=await get(ref(db,"users/"+me.uid+"/settings"));if(snap.exists()){userSettings={...userSettings,...snap.val()};localStorage.setItem(settingsKey(),JSON.stringify(userSettings));applySettings()}else{await set(ref(db,"users/"+me.uid+"/settings"),userSettings)}}catch(err){console.warn("Настройки пока загружены только из браузера",err)}}
+$("settingsBtn").onclick=()=>{showModal("Настройки",`<label>Фруктовая тема</label><select id="fruitTheme"><option value="orange">🍊 Апельсин — оранжевая</option><option value="strawberry">🍓 Клубника — красная</option><option value="banana">🍌 Банан — жёлтая</option><option value="watermelon">🍉 Арбуз — зелёная</option><option value="blueberry">🫐 Черника — фиолетовая</option><option value="dark">🌙 Тёмная</option></select><label>Шрифт</label><select id="font"><option>Inter</option><option>Georgia</option><option>Arial</option><option>Courier New</option></select><label>Обои чата (необязательно, URL картинки)</label><input id="wall" placeholder="https://..."><p class="muted small">Настройки сохраняются в этом браузере и в Firebase отдельно для каждого аккаунта.</p><button id="saveSettings">Сохранить настройки</button>`);$("fruitTheme").value=userSettings.fruit||"orange";$("font").value=userSettings.font||"Inter";$("wall").value=userSettings.wall||""};
+$("modalContent").addEventListener("click",async e=>{if(e.target.id==="saveSettings"){userSettings={fruit:$("fruitTheme").value,font:$("font").value,wall:$("wall").value.trim()};localStorage.setItem(settingsKey(),JSON.stringify(userSettings));applySettings();try{await set(ref(db,"users/"+me.uid+"/settings"),userSettings);note("Настройки сохранены в браузере и Firebase") }catch(err){alert("Сохранено в браузере, но Firebase не ответил: "+err.message)}closeModal()}});
+$("storiesBtn").onclick=()=>showModal("Добавить историю",'<label>Текст истории</label><input id="storyText" maxlength="180" placeholder="Что нового?"><button id="postStory">Опубликовать на 24 часа</button>');
+$("modalContent").addEventListener("click",async e=>{if(e.target.id==="postStory"){let text=$("storyText").value.trim();if(!text)return;await push(ref(db,"stories"),{uid:me.uid,text,type:"text",createdAt:Date.now(),expiresAt:Date.now()+86400000});closeModal()}});
+function subscribeStories(){if(storiesUnsub)storiesUnsub();storiesUnsub=onValue(ref(db,"stories"),s=>{let stories=Object.entries(s.val()||{}).filter(([id,x])=>x.expiresAt>Date.now());$("storiesStrip").innerHTML=stories.map(([id,x])=>`<span class="story" data-story="${id}"><span class="avatar">${x.type==="text"?"🍓":"🍊"}</span><small>${esc(x.uid===me.uid?"Вы":x.uid.slice(0,7))}</small></span>`).join("")+'<button class="secondary" id="newStoryInline">＋</button>'})}
+$("storiesStrip").onclick=e=>{if(e.target.id==="newStoryInline")$("storiesBtn").click();let s=e.target.closest("[data-story]");if(s){get(ref(db,"stories/"+s.dataset.story)).then(x=>{let v=x.val();showModal("История",`<p>${esc(v.text||"")}</p>`)})}};
+/* Скрытая админ-панель: 5 кликов по логотипу. Пароль хранится в RTDB config/admin_password, НЕ в HTML. Клиентская проверка — только демонстрация!
+   Для настоящего администрирования используйте Cloud Functions + custom claims и закрытые rules. */
 $("logo").onclick=()=>{adminClicks++;if(adminClicks>=5){adminClicks=0;showModal("Секретный вход",'<input id="adminPass" type="password" placeholder="Пароль администратора"><button id="adminEnter">Войти</button>')}setTimeout(()=>adminClicks=0,2500)};
 $("modalContent").addEventListener("click",async e=>{if(e.target.id==="adminEnter"){let pass=$("adminPass").value;let saved=(await get(ref(db,"config/admin_password"))).val();if(!saved||pass!==saved){alert("Неверный пароль");return}closeModal();$("adminBtn").classList.remove("hidden");adminPanel()}});
 $("adminBtn").onclick=adminPanel;
-
 async function adminPanel(){showModal("Админ-панель",'<input id="adminUid" placeholder="UID пользователя"><button id="adminLoad">Открыть пользователя</button><button id="allChats">Список чатов</button><div id="adminResult"></div>')}
-
-$("modalContent").addEventListener("click",async e=>{
- if(e.target.id==="adminLoad"){let uid=$("adminUid").value,u=(await get(ref(db,"users/"+uid))).val();if(!u){$("adminResult").textContent="Не найден";return}$("adminResult").innerHTML=`<p>${esc(u.username)} · ${esc(u.displayName)}</p><input id="adminNick" value="${esc(u.displayName||"")}"><label>Аватар URL</label><input id="adminAvatar" value="${esc(u.avatar||"")}"><label><input id="adminVerify" type="checkbox" ${u.verified?"checked":""} style="width:auto"> Галочка</label><button id="adminSaveUser">Сохранить</button><button id="adminDeleteUser" class="danger">Удалить профиль</button>`;$("adminResult").dataset.uid=uid}
- if(e.target.id==="adminSaveUser"){let uid=$("adminResult").dataset.uid;await update(ref(db,"users/"+uid),{displayName:$("adminNick").value,avatar:$("adminAvatar").value,verified:$("adminVerify").checked});alert("Профиль обновлён")}
- if(e.target.id==="adminDeleteUser"){let uid=$("adminResult").dataset.uid;if(confirm("Удалить профиль?"))await remove(ref(db,"users/"+uid))}
- if(e.target.id==="allChats"){let s=await get(ref(db,"messages"));let out=[];for(let [chat,items] of Object.entries(s.val()||{})){for(let [id,m] of Object.entries(items||{}))out.push({chat,id,m})}$("adminResult").innerHTML=out.slice(-100).map(x=>`<p>${esc(x.chat)} · ${esc(x.m.text||x.m.type)} <button class="danger adminDel" data-chat="${esc(x.chat)}" data-id="${esc(x.id)}">Удалить</button></p>`).join("")||"Сообщений нет"}
- if(e.target.classList.contains("adminDel")){await remove(ref(db,`messages/${e.target.dataset.chat}/${e.target.dataset.id}`));e.target.parentElement.remove()}
+$("modalContent").addEventListener("click",async e=>{if(e.target.id==="adminLoad"){let uid=$("adminUid").value,u=(await get(ref(db,"users/"+uid))).val();if(!u){$("adminResult").textContent="Не найден";return}$("adminResult").innerHTML=`<p>${esc(u.username)} · ${esc(u.displayName)}</p><input id="adminNick" value="${esc(u.displayName||"")}"><label>Аватар URL</label><input id="adminAvatar" value="${esc(u.avatar||"")}"><label><input id="adminVerify" type="checkbox" ${u.verified?"checked":""} style="width:auto"> Галочка</label><button id="adminSaveUser">Сохранить</button><button id="adminDeleteUser" class="danger">Удалить профиль</button>`;$("adminResult").dataset.uid=uid}
+if(e.target.id==="adminSaveUser"){let uid=$("adminResult").dataset.uid;await update(ref(db,"users/"+uid),{displayName:$("adminNick").value,avatar:$("adminAvatar").value,verified:$("adminVerify").checked});alert("Профиль обновлён")}
+if(e.target.id==="adminDeleteUser"){let uid=$("adminResult").dataset.uid;if(confirm("Удалить профиль?"))await remove(ref(db,"users/"+uid))}
+if(e.target.id==="allChats"){let s=await get(ref(db,"messages"));let out=[];for(let [chat,items] of Object.entries(s.val()||{})){for(let [id,m] of Object.entries(items||{}))out.push({chat,id,m})}$("adminResult").innerHTML=out.slice(-100).map(x=>`<p>${esc(x.chat)} · ${esc(x.m.text||x.m.type)} <button class="danger adminDel" data-chat="${esc(x.chat)}" data-id="${esc(x.id)}">Удалить</button></p>`).join("")||"Сообщений нет"}
+if(e.target.classList.contains("adminDel")){await remove(ref(db,`messages/${e.target.dataset.chat}/${e.target.dataset.id}`));e.target.parentElement.remove()}
 });
-
 /* Игры в чате */
 $("gamesBtn").onclick=()=>{if(!activeChat){alert("Сначала открой чат");return}showModal("Игры в чате",'<button id="startTtt">Крестики-нолики</button> <button id="startChess">Шахматы</button><div id="gameArea"></div>')};
 $("modalContent").addEventListener("click",async e=>{if(e.target.id==="startTtt"){let s=await get(ref(db,`games/${activeChat}/ttt`));if(!s.exists())await set(ref(db,`games/${activeChat}/ttt`),{board:Array(9).fill(""),turn:me.uid,players:{[me.uid]:"X"},status:"playing"});renderTtt()}
- if(e.target.id==="startChess"){let s=await get(ref(db,`games/${activeChat}/chess`));if(!s.exists())await set(ref(db,`games/${activeChat}/chess`),{fen:"start",turn:"w",players:{[me.uid]:"w"}});renderChess()}
+if(e.target.id==="startChess"){let s=await get(ref(db,`games/${activeChat}/chess`));if(!s.exists())await set(ref(db,`games/${activeChat}/chess`),{fen:"start",turn:"w",players:{[me.uid]:"w"}});renderChess()}
 });
-
 function subscribeGame(){if(gameUnsub)gameUnsub();gameUnsub=onValue(ref(db,`games/${activeChat}/ttt`),s=>{if(s.exists()&&!$("modal").classList.contains("hidden")&&$("modalTitle").textContent.includes("Игры"))renderTtt()})}
-
 async function renderTtt(){let s=(await get(ref(db,`games/${activeChat}/ttt`))).val();if(!s)return;let sym=s.players?.[me.uid];if(!sym){sym=s.players?.X?"O":"X";await update(ref(db,`games/${activeChat}/ttt/players`),{[me.uid]:sym})}
 $("gameArea").innerHTML=`<p>Ход: ${esc(s.turn===me.uid?"ваш":s.turn)} · Вы: ${sym}</p><div style="display:grid;grid-template-columns:repeat(3,80px);gap:5px;justify-content:center">${s.board.map((v,i)=>`<button class="secondary tttCell" data-i="${i}" style="height:80px;font-size:30px;color:#333">${v||"·"}</button>`).join("")}</div><button class="secondary" id="resetTtt">Новая партия</button>`;
 }
-
 $("modalContent").addEventListener("click",async e=>{if(e.target.classList.contains("tttCell")){let s=(await get(ref(db,`games/${activeChat}/ttt`))).val(),i=+e.target.dataset.i,sym=s.players?.[me.uid];if(!sym||s.turn!==me.uid||s.board[i]||s.winner)return;let b=[...s.board];b[i]=sym;let wins=[[0,1,2],[3,4,5],[6,7,8],[0,3,6],[1,4,7],[2,5,8],[0,4,8],[2,4,6]];let winner=wins.some(w=>w.every(j=>b[j]===sym))?sym:"";await update(ref(db,`games/${activeChat}/ttt`),{board:b,turn:activeUid,winner,status:winner?"finished":"playing"})}
- if(e.target.id==="resetTtt")await set(ref(db,`games/${activeChat}/ttt`),{board:Array(9).fill(""),turn:me.uid,players:{[me.uid]:"X"},status:"playing"})});
-
+if(e.target.id==="resetTtt")await set(ref(db,`games/${activeChat}/ttt`),{board:Array(9).fill(""),turn:me.uid,players:{[me.uid]:"X"},status:"playing"})});
+/* Chess CDN libraries. Chessboard.js depends on jQuery; loaded dynamically. Firebase stores FEN. */
 async function loadScript(src){return new Promise((resolve,reject)=>{let s=document.createElement("script");s.src=src;s.onload=resolve;s.onerror=reject;document.head.append(s)})}
-
 async function renderChess(){try{if(!window.jQuery)await loadScript("https://code.jquery.com/jquery-3.7.1.min.js");if(!window.Chess)await loadScript("https://cdnjs.cloudflare.com/ajax/libs/chess.js/0.10.3/chess.min.js");if(!window.Chessboard)await loadScript("https://unpkg.com/chessboardjs@1.0.0/www/js/chessboard-1.0.0.min.js");
  let snap=await get(ref(db,`games/${activeChat}/chess`)),g=snap.val()||{fen:"start",players:{}};if(!g.players?.[me.uid]){let color=g.players?.w?"b":"w";await update(ref(db,`games/${activeChat}/chess/players`),{[me.uid]:color});g.players={...g.players,[me.uid]:color}}
  $("gameArea").innerHTML='<p>Шахматы · доска синхронизируется через Firebase</p><div id="chessBoard" class="gameboard"></div><button class="secondary" id="chessReset">Сбросить</button>';
@@ -211,25 +196,15 @@ async function renderChess(){try{if(!window.jQuery)await loadScript("https://cod
  onValue(ref(db,`games/${activeChat}/chess`),s=>{let v=s.val();if(v?.fen&&v.lastMoveBy!==me.uid){chess.load(v.fen);board.position(v.fen)}});
  $("modalContent").onclick=async e=>{if(e.target.id==="chessReset"){chess.reset();board.start();await set(ref(db,`games/${activeChat}/chess`),{fen:chess.fen(),turn:"w",players:g.players})}};
  }catch(e){$("gameArea").innerHTML="Не удалось загрузить шахматные библиотеки: "+esc(e.message)}}
-
+/* WebRTC: звонки 1:1 через RTDB signaling. Для production добавь TURN-сервер. */
 const rtcConfig={iceServers:[{urls:"stun:stun.l.google.com:19302"}]};
 $("callBtn").onclick=async()=>{if(!activeUid){alert("Открой чат");return}try{localStream=await navigator.mediaDevices.getUserMedia({audio:true,video:true});$("localVideo").srcObject=localStream;pc=new RTCPeerConnection(rtcConfig);localStream.getTracks().forEach(t=>pc.addTrack(t,localStream));pc.ontrack=e=>$("remoteVideo").srcObject=e.streams[0];callRef=ref(db,`calls/${activeChat}`);pc.onicecandidate=e=>{if(e.candidate)push(ref(db,`calls/${activeChat}/callerCandidates`),e.candidate.toJSON())};let offer=await pc.createOffer();await pc.setLocalDescription(offer);await set(callRef,{offer:{type:offer.type,sdp:offer.sdp},caller:me.uid,createdAt:Date.now()});onValue(ref(db,`calls/${activeChat}/answer`),async s=>{if(s.exists()&&!pc.currentRemoteDescription)await pc.setRemoteDescription(new RTCSessionDescription(s.val()))});onValue(ref(db,`calls/${activeChat}/calleeCandidates`),s=>Object.values(s.val()||{}).forEach(c=>pc.addIceCandidate(new RTCIceCandidate(c)).catch(()=>{})));$("callLayer").classList.remove("hidden");$("callStatus").textContent="Звонок создан. Второй участник должен принять его из этого чата."}catch(e){alert("Ошибка звонка: "+e.message)}};
 $("hangupBtn").onclick=async()=>{pc?.close();localStream?.getTracks().forEach(t=>t.stop());$("callLayer").classList.add("hidden");if(callRef)await remove(callRef);$("localVideo").srcObject=null;$("remoteVideo").srcObject=null};
-
+/* Push notifications: запрашиваем разрешение; реальные push в фоне требуют FCM service worker и VAPID key. */
 if("Notification"in window&&Notification.permission==="default")Notification.requestPermission().catch(()=>{});
-
-$("chatBody").addEventListener("dblclick",()=>{for(let i=0;i<12;i++){let f=document.createElement("span");f.className="fruit";f.textContent=["🍊","🍓","🍉","🍍","🥝"][Math.floor(Math.random()*5)];f.style.left=Math.random()*95+"vw";f.style.top="80vh";document.body.append(f);setTimeout(()=>f.remove(),2500)}});
-
+/* Пасхалка: тройной клик по пустой области чата запускает фруктовый дождь. */
+let taps=0,timer; $("chatBody").addEventListener("dblclick",()=>{for(let i=0;i<12;i++){let f=document.createElement("span");f.className="fruit";f.textContent=["🍊","🍓","🍉","🍍","🥝"][Math.floor(Math.random()*5)];f.style.left=Math.random()*95+"vw";f.style.top="80vh";document.body.append(f);setTimeout(()=>f.remove(),2500)}});
 window.addEventListener("beforeunload",()=>{msgUnsub?.();contactsUnsub?.();storiesUnsub?.();gameUnsub?.()});
-</script>
-<script>
-if ("serviceWorker" in navigator && location.protocol.startsWith("http")) {
-  window.addEventListener("load", () => {
-    navigator.serviceWorker.register("./sw.js").catch(err =>
-      console.error("Frutinger service worker registration failed:", err)
-    );
-  });
-}
 </script>
 </body>
 </html>
