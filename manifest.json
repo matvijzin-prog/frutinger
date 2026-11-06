@@ -1,0 +1,22 @@
+{
+  "id": "./",
+  "name": "Frutinger — Fruit Messenger",
+  "short_name": "Frutinger",
+  "description": "Уютный фруктовый мессенджер",
+  "lang": "ru",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#fff8f1",
+  "theme_color": "#ff784e",
+  "categories": ["social", "communication"],
+  "icons": [
+    {
+      "src": "./icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
