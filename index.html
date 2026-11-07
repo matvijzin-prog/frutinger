@@ -147,17 +147,14 @@
 <script type="module">
     import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm'
 
-    // --- ТВОЙ ПРОКСИ ОТ CLOUDFLARE ---
-    const SUPABASE_URL = "https://frutinger-proxy.matvijzin.workers.dev";
+    // --- ПРЯМОЕ ПОДКЛЮЧЕНИЕ К SUPABASE (без прокси) ---
+    const SUPABASE_URL = "https://tbhfbqntlzvdrznctui.supabase.co";
     const SUPABASE_KEY = "sb_publishable_4CtHPvIebhmNvilHi22HnA_IlTnZDcl";
-    
-    // --- ВАЖНО: Сам Supabase клиент должен знать, что мы ходим через прокси ---
-    // Для этого просто передаем ему наш URL.
     const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
 
     let myName = localStorage.getItem('frutinger_name') || "";
     let theme = localStorage.getItem('frutinger_theme') || 'light';
-    let currentChat = "general"; // Пока только общий чат
+    let currentChat = "general";
 
     // Тема
     window.toggleTheme = function() {
@@ -195,17 +192,14 @@
         loadMessages();
         loadUsers();
         
-        // Слушаем новые сообщения через прокси
+        // Слушаем новые сообщения
         supabase.channel('custom-all-channel')
           .on('postgres_changes', { event: '*', schema: 'public', table: 'messages' }, payload => {
             loadMessages();
           })
-          .subscribe((status) => {
-              console.log("WebSocket status:", status);
-          });
+          .subscribe();
     }
 
-    // Загрузка сообщений
     async function loadMessages() {
         const { data, error } = await supabase
             .from('messages')
@@ -259,7 +253,6 @@
         });
     }
 
-    // Отправка
     window.sendMessage = async function() {
         const input = document.getElementById('msgInput');
         const text = input.value.trim();
