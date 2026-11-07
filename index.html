@@ -110,7 +110,6 @@
                 <div class="contact-info"><h4>Общий чат</h4><p>Все пользователи</p></div>
             </div>
             <div class="list-title" style="margin-top:15px;">Друзья</div>
-            <!-- Список друзей будет загружаться здесь -->
         </div>
         <div class="actions">
             <button onclick="toggleTheme()">🌙 Тема</button>
@@ -148,9 +147,12 @@
 <script type="module">
     import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm'
 
-    // ТВОИ КЛЮЧИ
-    const SUPABASE_URL = "https://tbhfbqntlzvdrznctui.supabase.co";
+    // --- ТВОЙ ПРОКСИ ОТ CLOUDFLARE ---
+    const SUPABASE_URL = "https://frutinger-proxy.matvijzin.workers.dev";
     const SUPABASE_KEY = "sb_publishable_4CtHPvIebhmNvilHi22HnA_IlTnZDcl";
+    
+    // --- ВАЖНО: Сам Supabase клиент должен знать, что мы ходим через прокси ---
+    // Для этого просто передаем ему наш URL.
     const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
 
     let myName = localStorage.getItem('frutinger_name') || "";
@@ -193,12 +195,14 @@
         loadMessages();
         loadUsers();
         
-        // Слушаем новые сообщения
+        // Слушаем новые сообщения через прокси
         supabase.channel('custom-all-channel')
           .on('postgres_changes', { event: '*', schema: 'public', table: 'messages' }, payload => {
             loadMessages();
           })
-          .subscribe();
+          .subscribe((status) => {
+              console.log("WebSocket status:", status);
+          });
     }
 
     // Загрузка сообщений
@@ -208,7 +212,7 @@
             .select('*')
             .order('created_at', { ascending: true });
 
-        if (error) { console.error(error); return; }
+        if (error) { console.error("Load error:", error); return; }
 
         const box = document.getElementById('messages');
         box.innerHTML = "";
@@ -237,19 +241,13 @@
         box.scrollTop = box.scrollHeight;
     }
 
-    // Загрузка пользователей (пока просто заглушка)
     async function loadUsers() {
-        const { data, error } = await supabase
-            .from('messages')
-            .select('name');
-        
+        const { data, error } = await supabase.from('messages').select('name');
         if (error) return;
         
         const uniqueUsers = [...new Set(data.map(m => m.name))].filter(u => u !== myName);
         const list = document.getElementById('userList');
-        const friendsHeader = list.querySelector('.list-title:nth-of-type(2)');
         
-        // Удаляем старых друзей
         const oldFriends = list.querySelectorAll('.friend-item');
         oldFriends.forEach(el => el.remove());
         
@@ -268,30 +266,23 @@
         if (!text) return;
         input.value = "";
         
-        await supabase
-            .from('messages')
-            .insert([{ name: myName, text: text }]);
+        const { error } = await supabase.from('messages').insert([{ name: myName, text: text }]);
+        if (error) {
+            console.error("Send error:", error);
+            alert("Ошибка отправки! Проверь консоль (F12).");
+        }
     }
 
-    // Редактирование
     window.editMessage = async function(id, oldText) {
         const newText = prompt("Редактировать сообщение:", oldText);
         if (newText === null || newText.trim() === "") return;
-        
-        await supabase
-            .from('messages')
-            .update({ text: newText })
-            .eq('id', id);
+        await supabase.from('messages').update({ text: newText }).eq('id', id);
         loadMessages();
     }
 
-    // Удаление
     window.deleteMessage = async function(id) {
         if (!confirm("Удалить сообщение?")) return;
-        await supabase
-            .from('messages')
-            .delete()
-            .eq('id', id);
+        await supabase.from('messages').delete().eq('id', id);
         loadMessages();
     }
 
@@ -305,7 +296,6 @@
         if (e.key === 'Enter') sendMessage();
     }
 
-    // Пасхалка
     window.triggerFruitRain = function() {
         const fruits = ['🍎', '🍌', '🍇', '🍓', '🍉', '🍊', '🍍', '🥝'];
         for (let i = 0; i < 30; i++) {
